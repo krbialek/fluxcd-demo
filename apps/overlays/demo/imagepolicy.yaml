@@ -1,0 +1,12 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta1
+kind: ImagePolicy
+metadata:
+  name: demo
+spec:
+  filterTags:
+    pattern: '[0-9]+\.[0-9]+'
+  imageRepositoryRef:
+    name: nginx
+  policy:
+    semver:
+      range: '>=0.1'

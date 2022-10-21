@@ -7,3 +7,4 @@ resources:
   - service.yaml
   - imagerepository.yaml
   - imageautomation.yaml
+  - imagepolicy.yaml
