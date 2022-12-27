@@ -24,17 +24,19 @@ jobs:
         run: git clone https://github.com/krbialek/hello-chart.git
       - name: Add SHORT_SHA env property with commit short sha
         run: echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-4`" >> $GITHUB_ENV
+        env:
+          SITE_ID=
       - name: Run a one-line script
         run: echo Hello, world from https://test.com/${SHORT_SHA}.git
       - name: ls
-        run: ls -lra
+        run: echo $GITHUB_ENV
       - name: Render template
         id: render_template
         uses: chuhlomin/render-template@v1.6
         with:
           template: hello-chart/.github/templates/template.yaml
           vars: |
-            siteid: $SHORT_SHA
+            siteid: ${SHORT_SHA}
 
       - name: Deploy
         run: |-
