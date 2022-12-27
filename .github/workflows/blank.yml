@@ -22,7 +22,7 @@ jobs:
         id: render_template
         uses: chuhlomin/render-template@v1.6
         with:
-          template: .github/templates/template.yaml
+          template: templates/template.yaml
           vars: |
             siteid: tst5
 
