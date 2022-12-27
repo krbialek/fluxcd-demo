@@ -24,8 +24,6 @@ jobs:
         run: git clone https://github.com/krbialek/hello-chart.git
       - name: Add SHORT_SHA env property with commit short sha
         run: echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-4`" >> $GITHUB_ENV
-        env:
-          SITE_ID=
       - name: Run a one-line script
         run: echo Hello, world from https://test.com/${SHORT_SHA}.git
       - name: ls
