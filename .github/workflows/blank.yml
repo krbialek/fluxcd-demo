@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 env:
   REPONAME: 'Test'
-  SHA4: ${GITHUB_SHA:0:4}
+  SHA4: ${GITHUB_SHA}
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -20,8 +20,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       # Runs a single command using the runners shell
+      - name: Add SHORT_SHA env property with commit short sha
+        run: echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-4`" >> $GITHUB_ENV
       - name: Run a one-line script
-        run: echo Hello, world from https://test.com/${SHA4}.git
+        run: echo Hello, world from https://test.com/${SHORT_SHA}.git
       - name: ls
         run: ls -lra
       - name: Render template
