@@ -24,7 +24,7 @@ jobs:
         with:
           template: templates/template.yaml
           vars: |
-            siteid: tst5
+            siteid: "tst5"
 
       - name: Deploy
         run: |-
