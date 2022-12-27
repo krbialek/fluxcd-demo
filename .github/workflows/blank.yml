@@ -34,7 +34,7 @@ jobs:
         with:
           template: hello-chart/.github/templates/template.yaml
           vars: |
-            siteid: ${SHORT_SHA}
+            siteid: {{ env.SHORT_SHA }}
 
       - name: Deploy
         run: |-
