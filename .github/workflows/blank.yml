@@ -32,7 +32,7 @@ jobs:
         id: render_template
         uses: chuhlomin/render-template@v1.6
         with:
-          template: templates/template.yaml
+          template: hello-chart/.github/templates/template.yaml
           vars: |
             siteid: "tst5"
 
