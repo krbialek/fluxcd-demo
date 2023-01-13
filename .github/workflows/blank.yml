@@ -38,6 +38,6 @@ jobs:
             siteid: "${{ env.SHORT_SHA }}"
       - name: Deploy
         run: |-
-          echo '${{ env.url }}'
+          curl https://${{ env.url }}
           
           
