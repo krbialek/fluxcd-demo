@@ -38,6 +38,7 @@ jobs:
             siteid: "${{ env.SHORT_SHA }}"
       - name: Deploy
         run: |-
-          curl https://${{ env.url }}
+          set -e
+          curl https://onet.pl
           
           
