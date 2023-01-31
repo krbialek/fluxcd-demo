@@ -1,0 +1,40 @@
+  integration_test_run:
+
+    name: integration test run
+    needs: preparing_integration_test
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup SSH
+        uses: MrSquaare/ssh-setup-action@v2
+        with:
+          host: github.com
+          private-key: ${{ secrets.AI_GH_REPOSITORY_PRIVATE_KEY }}
+      - name: Install yq
+        run: |
+          sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+          sudo chmod a+x /usr/local/bin/yq
+      - name: Clone gitops repository
+        run: git clone git@github.com:mendelhealth/${REPONAME}.git
+      - name: Create SITE_ID env property with commit short 4 digits sha
+        run: |
+          GIT_SHORT_HASH="$(echo "$GIT_HASH" | cut -c1-3)"
+          SITE_ID=$(echo "t$GIT_SHORT_HASH")
+          echo "SITE_ID=$SITE_ID" >> $GITHUB_ENV
+          echo "PIPELINE_STATE_URL=http://pipeline-state.$SITE_ID-pipeline" >> $GITHUB_ENV
+      - name: Render Mendel tenant template
+        id: render_tenant_template
+        env:
+          rtJobServerWorkerConf: ${{needs.preparing_integration_test.outputs.rtJobServerWorkerConf}}
+        run: |
+          sed s/"{{ .siteid }}"/${{ env.SITE_ID }}/g ${REPONAME}/.github/templates/tenant-template.yaml > ${REPONAME}/tenants/${CLUSTER}/${SITE_ID}.yaml 
+          yq eval -i 'select(documentIndex==1).spec.values.rt-job-server.values.env.extraConfig = strenv(rtJobServerWorkerConf)' ${REPONAME}/tenants/${CLUSTER}/${SITE_ID}.yaml
+      - name: Update kustomization.yaml
+        run: |
+          yq -i eval '.resources |= . + ["${{ env.SITE_ID }}.yaml"]' ${REPONAME}/tenants/${CLUSTER}/kustomization.yaml
+      - name: Commit tenant file into gitops repo, deploy tenant
+        run: |
+          cd ${REPONAME}
+          git config user.email "github-action@users.noreply.github.com"
+          git config user.name " Github Action"
+          git add -A && git commit -m "Add new tenant ${{ env.SITE_ID }}" && git push
