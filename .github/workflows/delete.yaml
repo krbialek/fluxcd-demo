@@ -1,8 +1,21 @@
-  integration_test_run:
+name: DELETE TENANT
+run-name: ${{ github.sha }}
+on:
 
-    name: integration test run
-    needs: preparing_integration_test
-    runs-on: self-hosted
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+env:
+  REPONAME: 'Test'
+  SHA4: ${GITHUB_SHA}
+  url: 'onet.pl'
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v3
       - name: Setup SSH
