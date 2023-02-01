@@ -13,5 +13,5 @@ jobs:
       - name: Setup scala
         uses: olafurpg/setup-scala@v11
         with:
-          java-version: openjdk@1.18.0
+          java-version: adopt@1.8
 
