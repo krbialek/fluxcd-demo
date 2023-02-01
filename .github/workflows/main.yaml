@@ -1,41 +1,17 @@
-name: Delete tenant
+name: Build rt-job-server
 on:
   workflow_dispatch:
-    inputs:
-      site_id:
-        description: 'Tenant name to delete'
-        required: true
-        default: ''
-        type: string
-env:
-  REPONAME: 'kubernetes-infra-manifests'
-  CLUSTER: 'mendel-stage-001'
-  SITE_ID: ${{ github.event.inputs.site_id }}
 
 jobs:
-  Delete_tenant :
-    name: Delete tenant
-    runs-on: self-hosted
+  Build_rt-job-server:
+    name: Build rt-job-server
+    runs-on: ubuntu-latest
     steps:
-      - name: Setup SSH
-        uses: MrSquaare/ssh-setup-action@v2
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup scala
+        uses: olafurpg/setup-scala@v11
         with:
-          host: github.com
-          private-key: ${{ secrets.AI_GH_REPOSITORY_PRIVATE_KEY }}
-      - name: Install yq
-        run: |
-          sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
-          sudo chmod a+x /usr/local/bin/yq
-      - name: Clone gitops repository
-        run: git clone git@github.com:mendelhealth/${REPONAME}.git
-      - name: Update kustomization.yaml
-        run: yq -i eval '.resources |= . - ["${{ env.SITE_ID }}.yaml"]' ${REPONAME}/tenants/${CLUSTER}/kustomization.yaml
-      - name: Undeploy tenant
-        run: |
-          cd ${REPONAME}
-          git config user.email "github-action@users.noreply.github.com"
-          git config user.name " Github Action"
-          git add -A && git commit -m "Delete tenant ${{ env.SITE_ID }}" && git push
-      - name: Remove dbs, indexes, buckets
-        run: |
-          curl -i -XDELETE 'http://tenant-service.infra/tenants/${{ env.SITE_ID }}?purge_data=true'
+          java-version: openjdk@1.18.0
+
