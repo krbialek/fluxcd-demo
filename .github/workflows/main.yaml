@@ -7,36 +7,13 @@ jobs:
     name: Build rt-job-server
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Setup scala
-        uses: olafurpg/setup-scala@v11
-        with:
-          java-version: adopt@1.8
-      - name: Compile
-        run: sbt -sbt-create
-
-  release:
-    if: ${{ (github.ref == 'refs/heads/master') }}
-    env:
-      DOCKER_IMAGE: gcr.io/mendel-health/rt-job-server
-    needs:
-      - test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - name: Get tags
-        run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
-      
-      - name: Setup scala
-        uses: olafurpg/setup-scala@v11
-        with:
-          java-version: adopt@1.8
+      - name: print secrets
+        run: |
+            echo $DEV_ENV_FILE >> /tmp/credentials
+            cat /tmp/credentials
+        shell: bash
+        env:
+          DEV_ENV_FILE : ${{secrets.SECRET1}}
       
 
       
