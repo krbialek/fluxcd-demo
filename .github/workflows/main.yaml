@@ -22,7 +22,7 @@ env:
 
 jobs:
   test:
-    name: Build $SERVICE
+    name: Build ${{ env.SERVICE }}
     runs-on: ubuntu-latest
     steps:
       - name: print secrets
