@@ -36,9 +36,14 @@ jobs:
       - name: print sbt command
         run:
           echo 'project $SERVICE / ${{ env.SERVICE }}'
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v1'
       - name: Login to GCR
         uses: docker/login-action@v2
         with:
           registry: us-central1-docker.pkg.dev
           username: _json_key
           password: ${{ secrets.DOCKER }}
+      - name: configure docker
+        run:
+          gcloud auth configure-docker us-central1-docker.pkg.dev
