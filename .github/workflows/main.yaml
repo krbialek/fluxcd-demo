@@ -35,7 +35,7 @@ jobs:
           
       - name: print sbt command
         run:
-          sbt $SERVICE/clean
+          echo 'project $SERVICE / ${{ env.SERVICE }}
       
 
       
