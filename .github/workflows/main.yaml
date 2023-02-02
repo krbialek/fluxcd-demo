@@ -37,6 +37,12 @@ jobs:
         run:
           echo 'project $SERVICE / ${{ env.SERVICE }}'
       
-
-      
-      
+      - name: Setup gcloud CLI with Docker auth
+        # You may pin to the exact commit or the version.
+        # uses: jacobsvante/setup-gcloud-with-docker-auth-action@b0bd90ddccb95eeca6a722ac5e93b8e32dad8da9
+        uses: jacobsvante/setup-gcloud-with-docker-auth-action@v0.1.1
+        with:
+          # The Google Cloud JSON service account key to use for authentication
+          gcp-credentials-json: ${{ secrets.DOCKER }}
+          # The GCP project for which to set up gcloud CLI
+          gcp-project-id: mendel-stage-001
