@@ -1,4 +1,4 @@
-name: Build rt-job-server
+name: Build pipeline services
 on:
   workflow_dispatch:
     inputs:
