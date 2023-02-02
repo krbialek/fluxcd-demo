@@ -36,13 +36,11 @@ jobs:
       - name: print sbt command
         run:
           echo 'project $SERVICE / ${{ env.SERVICE }}'
-      
-      - name: Setup gcloud CLI with Docker auth
+
+      - name: gcloud Container Registry Docker Login
         # You may pin to the exact commit or the version.
-        # uses: jacobsvante/setup-gcloud-with-docker-auth-action@b0bd90ddccb95eeca6a722ac5e93b8e32dad8da9
-        uses: jacobsvante/setup-gcloud-with-docker-auth-action@v0.1.1
+        # uses: elgohr/gcloud-login-action@ef736b239a2f47b76b0a58b688e9c603e65bb37a
+        uses: elgohr/gcloud-login-action@v2
         with:
-          # The Google Cloud JSON service account key to use for authentication
-          gcp-credentials-json: ${{ secrets.DOCKER }}
-          # The GCP project for which to set up gcloud CLI
-          gcp-project-id: mendel-stage-001
+          # Base64 encoded service account key exported as JSON
+          account_key: ${{ secrets.DOCKER }}
