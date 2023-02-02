@@ -32,6 +32,10 @@ jobs:
         shell: bash
         env:
           DEV_ENV_FILE : ${{secrets.SECRET1}}
+          
+      - name: print sbt command
+        run:
+          sbt $SERVICE/clean
       
 
       
