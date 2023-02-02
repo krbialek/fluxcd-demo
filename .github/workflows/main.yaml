@@ -36,7 +36,7 @@ jobs:
       - name: print sbt command
         run:
           echo 'project $SERVICE / ${{ env.SERVICE }}'
-      - name: Login to GAR
+      - name: Login to GCR
         uses: docker/login-action@v2
         with:
           registry: us-central1-docker.pkg.dev
