@@ -36,6 +36,11 @@ jobs:
       - name: print sbt command
         run:
           echo 'project $SERVICE / ${{ env.SERVICE }}'
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: '${{ secrets.DOCKER }}'
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v1'
       - name: Login to GCR
