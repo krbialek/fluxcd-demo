@@ -48,7 +48,7 @@ jobs:
         run:
           gcloud auth configure-docker us-central1-docker.pkg.dev
       - name: Set output
-        run: echo "sha7=$(echo ${GITHUB_SHA} | cut -c1-7)" >> $GITHUB_OUTPUT
+        run: echo "SHA7=$(echo ${GITHUB_SHA} | cut -c1-7)" >> $GITHUB_ENV
       - name: Print output
-        run: echo $GITHUB_OUTPUT
+        run: echo ${{ env.SHA7 }}
         
