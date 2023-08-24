@@ -1,0 +1,64 @@
+# This workflow will be used to update dev color cluster by updating docker image tag.
+# It will get image version from the commit tag, wait for image to be present in ECR 
+# and if yes it will update gitops-nutrono-apps repository with this new image tag.
+
+name: Update dev color cluster
+
+on:
+  #push:
+  #  tags:
+  #    - '*'
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: 'Add docker image tag do deploy'
+        required: true
+        type: choice
+        default: 'latest'
+        options:
+        - 'v1.2.40'
+        - 'v1.2.38'
+        - 'develop'
+
+      cluster_color:
+        description: "Select cluster color to deploy image to"
+        required: true
+        default: ''
+        type: choice
+        options:
+        - 'red'
+        - 'green'
+        - 'magenta'
+
+jobs:
+  get_latest_tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Required due to the way Git works, without it this action won't be able to find any or the correct tags
+      - uses: LuisEnMarroquin/setup-ssh-action@v2.0.0
+        with:
+          SSHKEY: ${{ secrets.SSH }}
+      - run: ssh -T git@github.com || true
+        
+      - name: Clone gitops-nutrino-app repository
+        run: |
+          git clone -b main https://github.com/krbialek/hello-chart.git
+
+      - name: Get current docker tag from file for algo
+        run: |
+          ls -la
+          #CURRENT_TAG=$(cat gitops-nurtino-apps/namespaces/nutrino/algo/values-from-terraform.yaml |grep tag: |cut -d ' ' -f4)
+      
+      - name: Update values-from-terraform.yaml file
+        run: |
+          #sed -i 's/$CURRENT_TAG/${{ github.event.inputs.image_tag }}/g' gitops-nurtino-apps/namespaces/nutrino/algo/values-from-terraform.yaml
+          #cat gitops-nurtino-apps/namespaces/nutrino/algo/values-from-terraform.yaml
+          ls -la
+      # - name: Commit tenant file into gitops repo, deploy tenant
+      #   run: |
+      #     cd ${REPONAME}
+      #     git config user.email "github-action@users.noreply.github.com"
+      #     git config user.name " Github Action"
+      #     git add -A && git commit -m "Update docker image tag" && git push
